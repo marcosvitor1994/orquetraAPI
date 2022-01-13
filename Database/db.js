@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require('dotenv').config()
 
 const DB_PASS= process.env.DB_PASS;
 const DB_HOST= process.env.DB_HOST;
@@ -11,7 +12,7 @@ class Connection {
     }
     mongodb() {
       mongoose.connect(
-          `mongodb+srv://${DB_USER}:${DB_PASS}@cluster0.fz6kt.mongodb.net/${DB_NAME}?retryWrites=true&w=majority` 
+          `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority` 
           , {
             useNewUrlParser: true,
             useUnifiedTopology: true,

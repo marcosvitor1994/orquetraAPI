@@ -6,11 +6,11 @@ const UserSchema = new mongoose.Schema(
   {
     nome: {
       type: String,
-      required: [true, "Campo nome deve ser preenchido"],
+      required: [false, "Campo nome deve ser preenchido"],
     },
     sexo: {
       type: String,
-      required: [true, "Campo sexo deve ser preenchido"],
+      required: [false, "Campo sexo deve ser preenchido"],
     },
     email: {
       type: String,
@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema(
     endereco: {
       cidade: {
         type: String,
-        required: [true, "Campo cidade deve ser preenchido"],
+        required: [false, "Campo cidade deve ser preenchido"],
       },
       quadra: {
         type: String,
@@ -35,7 +35,7 @@ const UserSchema = new mongoose.Schema(
       },
       cep: {
         type: String,
-        required: [true, "Campo cep deve ser preenchido"],
+        required: [false, "Campo cep deve ser preenchido"],
       },
       complemento: {
         type: String,

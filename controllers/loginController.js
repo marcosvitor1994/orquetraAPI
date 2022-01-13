@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+require('dotenv').config()
 
 const { UserModel } = require("../models/usuarios");
 
@@ -13,6 +14,7 @@ class LoginController {
   /* code 150 .. 159 */
   async login(req, res, next) {
     try {
+      
       const { email, senha } = req.body;
 
       const userExiste = await UserModel.findOne({ email: email });
