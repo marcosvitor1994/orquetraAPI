@@ -1,78 +1,57 @@
 const { Router, json } = require("express"); 
 const bcrypt = require('bcrypt');
 
-const {UserModel, MedicoModel, AtendenteModel, PacienteModel, AdminModel} = require("../models/usuarios.js");
+const {UserModel, AdminModel} = require("../models/usuarios.js");
 const authMidd = require("../middlewares/auth.js");
 
-
 const LoginController = require("../controllers/loginController");
-const medicoController = require("../controllers/medicoController");
-const atendenteController = require("../controllers/atendenteController");
-const pacienteController = require("../controllers/pacienteController");
-const consultaModel = require("../models/consultaModel");
-const profileController = require("../controllers/profileController.js");
-const consultaController = require("../controllers/consultaController.js");
+const ProfileController = require("../controllers/profileController.js");
+const musicoController = require("../controllers/musicoController.js");
+const alunoController = require("../controllers/alunoController.js");
+const EventsController = require("../controllers/eventsController.js");
+const ContatoController = require("../controllers/contatoController")
 
 const routes = new Router();
 
-// LOGIN - Atendente, Medico, Admin
+// LOGIN - Aluno, Músico, Admin
 routes.post('/login', LoginController.login);
 
-//Medicos
-routes.get("/medicos", authMidd(["Atendente", "Admin"]), medicoController.list);
-routes.get("/medicos/:pid", authMidd(["Atendente", "Admin"]), medicoController.listOne);
-routes.post("/medicos", authMidd(["Admin"]), medicoController.create);
-routes.put("/medicos/:pid", authMidd(["Medico", "Admin"]), medicoController.update);
-routes.delete("/medicos/:pid", authMidd(["Admin"]), medicoController.delete);
+// Contato
 
-// Atendente
-routes.get("/atendentes", authMidd(["Atendente", "Admin"]), atendenteController.list)
-routes.get("/atendentes/:pid", authMidd(["Atendente", "Admin"]), atendenteController.listOne);
-routes.post("/atendentes", authMidd(["Admin"]), atendenteController.create);
-routes.put("/atendentes/:pid", authMidd(["Atendente", "Admin"]), atendenteController.update);
-routes.delete("/atendentes/:pid", authMidd(["Admin"]), atendenteController.delete);
+routes.get("/contato", authMidd(["Admin"]), ContatoController.list);
+routes.get("/contato/:pid", authMidd(["Admin"]), ContatoController.listOne);
+routes.delete("/contato/:pid", authMidd(["Admin"]), ContatoController.delete);
+routes.post("/contato", ContatoController.create);
 
-// Paciente
-routes.get("/pacientes", authMidd(["Atendente", "Medico", "Admin"]), pacienteController.list);
-routes.get("/pacientes/:pid", authMidd(["Atendente", "Medico", "Admin"]), pacienteController.listOne);
-routes.post("/pacientes", authMidd(["Atendente", "Admin"]), pacienteController.create);
-routes.put("/pacientes/:pid", authMidd(["Atendente", "Admin"]), pacienteController.update);
-routes.delete("/pacientes/:pid", authMidd(["Admin"]), pacienteController.delete);
+// Eventos Calendário
+routes.get("/events", authMidd(["Admin", "Musico", "Aluno"]), EventsController.list);
+routes.post("/events", authMidd(["Admin"]), EventsController.create);
+routes.put("/events/:pid", authMidd(["Admin"]), EventsController.update);
+routes.delete("/events/:pid", authMidd(["Admin"]), EventsController.delete);
+
+//Musicos
+routes.get("/musicos", authMidd(["Admin"]), musicoController.list);
+routes.get("/musicos/:pid", authMidd(["Admin", "Musico"]), musicoController.listOne);
+routes.post("/musicos", musicoController.create);
+routes.put("/musicos/:id", authMidd(["Admin", "Musico"]), musicoController.update);
+routes.delete("/musicos/:id", authMidd(["Admin"]), musicoController.delete);
+
+//Alunos
+routes.get("/alunos", authMidd(["Admin"]), alunoController.list);
+routes.get("/alunos/:pid", authMidd(["Admin"]), alunoController.listOne);
+routes.post("/alunos", alunoController.create);
+routes.put("/alunos/:pid", authMidd(["Admin"]), alunoController.update);
+routes.delete("/alunos/:pid", authMidd(["Admin"]), alunoController.delete);
 
 // Profile
-routes.get("/profile", authMidd(["Admin", "Atendente", "Medico"]), profileController.list);
-routes.put("/profile", authMidd(["Admin", "Atendente", "Medico"]), profileController.update);
-routes.post("/profile/consultas", authMidd(["Medico"]), profileController.createConsulta);
-routes.get("/profile/consultas", authMidd(["Medico"]), profileController.listConsultaMedico);
-routes.put("/profile/consultas/:pid", authMidd(["Admin", "Medico"]), profileController.updateConsulta);
-
-// Rotas Consultas
-
-// listando todas as consultas 
-routes.get("/consultas", authMidd(["Atendente", "Medico" ,"Admin"]), (req, res) => {
-    const {medico, paciente, status, data_hora} = req.query;
-    consultaModel.find(JSON.parse(JSON.stringify({medico, paciente, status, data_hora}))).then(users =>{ res.json( users ) });
-})
-routes.put("/consultas/:pid", authMidd(["Atendente", "Admin"]), consultaController.updateConsulta)
-// populando todas as consultas
-routes.get("/consultas/populate", authMidd(["Atendente", "Admin"]), (req, res)=> {
-    consultaModel.find().populate('paciente').populate('medico').then(consultas =>{ 
-        res.json( consultas ) 
-    });
-})
-// Populando uma única consulta
-routes.get("/consultas/:pid/populate", authMidd(["Atendente", "Admin"]), (req, res)=> {
-    consultaModel.findOne({_id: req.params.pid}).populate('paciente').populate('medico').then(consulta =>{ 
-        res.json( consulta ) 
-    });
-})
+routes.get("/profile/:id", authMidd(["Admin", "Musico", "Aluno"]), ProfileController.list);
+routes.put("/profile/:id", authMidd(["Admin", "Musico", "Aluno"]), ProfileController.update);
 
 // Pesquisa de usuários
 routes.get("/users", (req, res) => {
     const {nome, sexo, email, _role} = req.query;
     UserModel.find(JSON.parse(JSON.stringify({nome, sexo, email, _role}))).select("-senha").then(users =>{ res.json( users ) });
 })
-
 
 routes.get("/admin", async (req, res) => {
     AdminModel.create({
@@ -86,7 +65,7 @@ routes.get("/admin", async (req, res) => {
 routes.get("/", (req, res, next) => {
     res.status(200).json({
         status: "Sucess", 
-        msg: "Grupo 04: Henrique, Marcos, Pedro, Roberta, Mateus"
+        msg: "Api Orquestra rodando!"
     });
 });
 

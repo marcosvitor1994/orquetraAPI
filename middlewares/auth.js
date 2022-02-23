@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
+const jwt_decode = require("jwt-decode")
 const { promisify } = require("util");
+require('dotenv').config()
 
 module.exports = function authorize(arrayOfAuthUsers) {
   return async (req, res, next) => {
@@ -13,10 +15,10 @@ module.exports = function authorize(arrayOfAuthUsers) {
       });
     }
 
-    const [, token] = authHeader.split(" ");
+    const [, token] = authHeader.split(" ")
 
     try {
-      const decode = await promisify(jwt.verify)(token, process.env.SECRET);
+      const decode = jwt_decode(token);
       req.userID = decode.id;
       req.userRole = decode.role;
       // logica
@@ -31,7 +33,7 @@ module.exports = function authorize(arrayOfAuthUsers) {
     } catch (err) {
       return res.status(401).json({
         error: true,
-        code: 161,
+        code: 162,
         message: "Erro: Token inválido!",
       });
     }

@@ -1,31 +1,41 @@
 const mongoose = require("mongoose");
 
-const { consultaSchema } = require("./consultaModel");
-
 const UserSchema = new mongoose.Schema(
   {
     nome: {
       type: String,
-      required: [false, "Campo nome deve ser preenchido"],
+      required: [true, "Campo nome deve ser preenchido"],
     },
     sexo: {
       type: String,
-      required: [false, "Campo sexo deve ser preenchido"],
+      required: [true, "Campo sexo deve ser preenchido"],
     },
     email: {
       type: String,
       required: [true, "Campo email deve ser preenchido"],
     },
+    telefone: {
+      type: String,
+      required: [true, "Campo Telefone deve ser preenchido"],
+    },
+    dataNascimento: {
+      type: String,
+      required: [true, "Campo Data de Nascimento deve ser preenchido"],
+    },
     endereco: {
+      logradouro: {
+        type: String,
+        required: false,
+      },
       cidade: {
         type: String,
         required: [false, "Campo cidade deve ser preenchido"],
       },
-      quadra: {
+      bairro: {
         type: String,
-        required: false,
+        required: [false, "Campo cidade deve ser preenchido"],
       },
-      rua: {
+      numero: {
         type: String,
         required: false,
       },
@@ -35,7 +45,7 @@ const UserSchema = new mongoose.Schema(
       },
       cep: {
         type: String,
-        required: [false, "Campo cep deve ser preenchido"],
+        required: false,
       },
       complemento: {
         type: String,
@@ -52,33 +62,33 @@ const UserSchema = new mongoose.Schema(
 const UserModel = mongoose.model("User", UserSchema);
 module.exports.UserModel = UserModel;
 
-module.exports.MedicoModel = UserModel.discriminator(
-  "Medico",
-  new mongoose.Schema({
-    crm: {
-      type: String,
-      required: [true, "O campo CRM deve ser preenchido"],
-    },
-    senha: {
-      type: String,
-      required: [true, "O campo senha deve ser preenchido"],
-    },
-  })
-);
 
-module.exports.AtendenteModel = UserModel.discriminator(
-  "Atendente",
+module.exports.MusicoModel = UserModel.discriminator(
+  "Musico",
   new mongoose.Schema({
     senha: {
       type: String,
       required: [true, "O campo senha deve ser preenchido"],
     },
+    instrumento: {
+      type: String,
+      required: [true, "Informe qual o instrumento o músico toca"]
+    }
   })
 );
 
-module.exports.PacienteModel = UserModel.discriminator(
-  "Paciente",
-  new mongoose.Schema({})
+module.exports.AlunoModel = UserModel.discriminator(
+  "Aluno",
+  new mongoose.Schema({
+    senha: {
+      type: String,
+      required: [true, "O campo senha deve ser preenchido"],
+    },
+    instrumento: {
+      type: String,
+      required: [true, "Informe qual o instrumento o músico deseja tocar"]
+    }
+  })
 );
 
 module.exports.AdminModel = UserModel.discriminator(

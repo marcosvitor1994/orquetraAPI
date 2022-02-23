@@ -1,15 +1,16 @@
-const { PacienteModel, UserModel } = require("../models/usuarios");
+const { AlunoModel, UserModel } = require("../models/usuarios");
+const bcrypt = require('bcrypt');
 
-PacienteModel;
+AlunoModel;
 
-class PacienteController {
+class alunoController {
   async list(req, res, next) {
     try {
-      PacienteModel.find({})
-        .then((Paciente) => {
+      AlunoModel.find({})
+        .then((alunos) => {
           res.json({
             error: false,
-            Paciente: Paciente,
+            alunos,
           });
         })
         .catch((err) => {
@@ -23,19 +24,19 @@ class PacienteController {
     }
   }
 
-  async listOne(req, res, next) {
+  async listOne(req, res) {
     try {
-      PacienteModel.findById(req.params.pid)
-        .then((Paciente) => {
+      AlunoModel.findById(req.params.pid)
+        .then((aluno) => {
           res.json({
             error: false,
-            Paciente: Paciente,
+            aluno,
           });
         })
         .catch((err) => {
           res.status(400).json({
             error: true,
-            message: "Erro, paciente não encontrado!",
+            message: "Erro, aluno não encontrado!",
           });
         });
     } catch (error) {
@@ -44,10 +45,9 @@ class PacienteController {
   }
 
   async create(req, res, next) {
-
     try {
-
-      const emailExiste = await UserModel.findOne({ email: req.body.email });
+      console.log(req.body.envioAluno)
+      const emailExiste = await UserModel.findOne({ email: req.body.envioAluno.email });
 
       if (emailExiste) {
 				return res.status(400).json({
@@ -57,11 +57,15 @@ class PacienteController {
 				});
 			};
 
-      PacienteModel.create(req.body)
-        .then((Paciente) => {
-          res.json({
+      if (req.body.senha){
+        req.body.envioAluno.senha = await bcrypt.hash(req.body.envioAluno.senha, 8);
+      }
+
+      AlunoModel.create(req.body.envioAluno)
+        .then((musico) => {
+          return res.json({
             error: false,
-            Paciente: Paciente,
+            musico,
           });
         })
         .catch((err) => {
@@ -86,7 +90,6 @@ class PacienteController {
   }
 
   async update(req, res, next) {
-
     try {
 
       if (req.body.email) {
@@ -101,11 +104,11 @@ class PacienteController {
         }
       }
 
-      PacienteModel.updateOne({ _id: req.params.pid }, req.body)
+      AlunoModel.updateOne({ _id: req.params.pid }, req.body)
         .then(() => {
           return res.json({
             error: false,
-            message: "Paciente atualizado com sucesso!",
+            message: "Aluno atualizado com sucesso!",
           });
         })
         .catch((err) => {
@@ -115,7 +118,7 @@ class PacienteController {
           if (err.name === "CastError") {
             return res.status(400).json({
               error: true,
-              message: "Paciente não encontrado!",
+              message: "Aluno não encontrado!",
             });
           }
 
@@ -139,11 +142,11 @@ class PacienteController {
 
   async delete(req, res, next) {
     try {
-      PacienteModel.deleteOne({ _id: req.params.pid })
+      AlunoModel.deleteOne({ _id: req.params.pid })
         .then(() => {
           res.json({
             error: false,
-            message: "Paciente deletado com sucesso!",
+            message: "Aluno deletado com sucesso!",
           });
         })
         .catch((err) => {
@@ -159,4 +162,4 @@ class PacienteController {
   }
 }
 
-module.exports = new PacienteController();
+module.exports = new alunoController();

@@ -15,7 +15,8 @@ class LoginController {
   async login(req, res, next) {
     try {
       
-      const { email, senha } = req.body;
+      const {email, senha} = req.body.data;
+      console.log(req.body.data)
 
       const userExiste = await UserModel.findOne({ email: email });
       if (!userExiste) {
@@ -24,10 +25,11 @@ class LoginController {
           code: 150,
           message: "Erro: Usuário não encontrado!",
         });
+        
       }
 
       if (!(await bcrypt.compare(senha, userExiste.senha))) {
-        return res.status(401).json({
+        return res.status(402).json({
           error: true,
           code: 151,
           message: "Erro: Senha inválida!",
@@ -39,6 +41,8 @@ class LoginController {
         user: {
           _id: userExiste._id,
           nome: userExiste.nome,
+          _role: userExiste._role,
+          instrumento: userExiste.instrumento,
           email,
         },
         token: jwt.sign(

@@ -1,16 +1,16 @@
-const { MedicoModel, UserModel } = require("../models/usuarios");
+const { MusicoModel, UserModel } = require("../models/usuarios");
 const bcrypt = require('bcrypt');
 
-MedicoModel;
+MusicoModel;
 
-class MedicoController {
+class MusicoController {
   async list(req, res, next) {
     try {
-      MedicoModel.find({})
-        .then((medicos) => {
+      MusicoModel.find({}).select('-senha')
+        .then((musicos) => {
           res.json({
             error: false,
-            medicos,
+            musicos,
           });
         })
         .catch((err) => {
@@ -26,17 +26,17 @@ class MedicoController {
 
   async listOne(req, res) {
     try {
-      MedicoModel.findById(req.params.pid)
-        .then((medico) => {
+      MusicoModel.findById(req.params.pid)
+        .then((musico) => {
           res.json({
             error: false,
-            medico,
+            musico,
           });
         })
         .catch((err) => {
           res.status(400).json({
             error: true,
-            message: "Erro, medico não encontrado!",
+            message: "Erro, músico não encontrado!",
           });
         });
     } catch (error) {
@@ -46,8 +46,7 @@ class MedicoController {
 
   async create(req, res, next) {
     try {
-
-      const emailExiste = await UserModel.findOne({ email: req.body.email });
+      const emailExiste = await UserModel.findOne({ email: req.body.envioMusico.email });
 
       if (emailExiste) {
 				return res.status(400).json({
@@ -57,15 +56,15 @@ class MedicoController {
 				});
 			};
 
-      if (req.body.senha){
-        req.body.senha = await bcrypt.hash(req.body.senha, 8);
+      if (req.body.envioMusico.senha){
+        req.body.envioMusico.senha = await bcrypt.hash(req.body.envioMusico.senha, 8);
       }
 
-      MedicoModel.create(req.body)
-        .then((medico) => {
+      MusicoModel.create(req.body.envioMusico)
+        .then((musico) => {
           return res.json({
             error: false,
-            medico,
+            musico,
           });
         })
         .catch((err) => {
@@ -92,23 +91,12 @@ class MedicoController {
   async update(req, res, next) {
     try {
 
-      if (req.body.email) {
-        emailExiste = await UserModel.findOne({
-          email: req.body.email,
-        });
-        if (emailExiste) {
-          return res.status(400).json({
-            error: true,
-            message: "Este email já está cadastrado!",
-          });
-        }
-      }
-
-      MedicoModel.updateOne({ _id: req.params.pid }, req.body)
+      
+      MusicoModel.updateOne({ _id: req.params.id }, req.body)
         .then(() => {
           return res.json({
             error: false,
-            message: "Medico atualizado com sucesso!",
+            message: "Músico atualizado com sucesso!",
           });
         })
         .catch((err) => {
@@ -118,7 +106,7 @@ class MedicoController {
           if (err.name === "CastError") {
             return res.status(400).json({
               error: true,
-              message: "Medico não encontrado!",
+              message: "Músico não encontrado!",
             });
           }
 
@@ -142,11 +130,11 @@ class MedicoController {
 
   async delete(req, res, next) {
     try {
-      MedicoModel.deleteOne({ _id: req.params.pid })
+      MusicoModel.deleteOne({ _id: req.params.id })
         .then(() => {
           res.json({
             error: false,
-            message: "Medico deletado com sucesso!",
+            message: "Músico deletado com sucesso!",
           });
         })
         .catch((err) => {
@@ -162,4 +150,4 @@ class MedicoController {
   }
 }
 
-module.exports = new MedicoController();
+module.exports = new MusicoController();

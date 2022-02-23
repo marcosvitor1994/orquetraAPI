@@ -1,21 +1,29 @@
-const {UserModel, MedicoModel, AtendenteModel, PacienteModel, AdminModel} = require("../models/usuarios.js");
+const {UserModel} = require("../models/usuarios.js");
 const bcrypt = require('bcrypt');
-const consultaModel = require("../models/consultaModel.js");
+const consultaModel = require("../models/aulaModel.js");
 
 class ProfileController {
     // GET /profile
-    async list(req,res) {
-        UserModel.findById(req.userID).select("-senha").then((user) => { // sucesso
-            res.json({
-                error: false,
-                user
-            })
-        }).catch((err) => { // erro
-            res.status(400).json({
-                error: true,
-                message: "Erro, usuário não encontrado!"
-            })
-        });
+    async list(req, res, next) {
+
+        try{
+            UserModel.findById(req.params.id).then((user) => { // sucesso
+                res.json({
+                    error: false,
+                    user
+                })
+            }).catch((err) => { // erro
+                res.status(400).json({
+                    error: true,
+                    message: "Erro, usuário não encontrado!"
+                })
+            });
+        } catch (error) {
+        
+          return next(error);
+
+        }
+        
     }
 
     // PUT /profile
@@ -37,7 +45,7 @@ class ProfileController {
             req.body.senha = bcrypt.hashSync(req.body.senha, 8);
         }
 
-        UserModel.updateOne({_id: req.userID}, req.body).then(() => { // sucesso
+        UserModel.updateOne({_id: req.params.id}, req.body).then(() => { // sucesso
             return res.json({
                 error: false,
                 message: "Usuário atualizado com sucesso!"

@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const User = require('../models/usuarios');
+const UserModel = require('../models/usuarios');
 
 class UserController {
 
@@ -9,7 +9,7 @@ class UserController {
 			const limit = req.query.limit || 3;
 			const page = req.query.page || 1;
 	
-			User.find({}).select('-senha').then((users) => {
+			UserModel.find({}).select('-senha').then((users) => {
 				return res.json({
 					error: false,
 					users
@@ -34,7 +34,7 @@ class UserController {
 
 		try {
 			
-			User.findOne({ _id: req.params.id }, '_id nome email createAt updateAt').then((user) => {
+			UserModel.findOne({ _id: req.params.id }, '_id nome email createAt updateAt _role').then((user) => {
 				return res.json({
 					error: false,
 					user: user
@@ -59,7 +59,7 @@ class UserController {
 	async create(req, res) {
 		
 		try {
-			const emailExiste = await User.findOne({ email: req.body.email });
+			const emailExiste = await UserModel.findOne({ email: req.body.email });
 	
 			if (emailExiste) {
 				return res.status(400).json({
@@ -72,7 +72,7 @@ class UserController {
 			const user = req.body;
 			user.senha = await bcrypt.hash(user.senha, 8);
 	
-			User.create(user).then((user) => {
+			UserModel.create(user).then((user) => {
 				return res.json( user );
 				
 			}).catch((err) => {
@@ -95,7 +95,7 @@ class UserController {
 	async update(req, res) {
 
 		try {
-			const usuarioExiste = await User.findOne({_id: req.params.id});
+			const usuarioExiste = await UserModel.findOne({_id: req.params.id});
 	
 			if(!usuarioExiste){
 				return res.status(400).json({
@@ -106,7 +106,7 @@ class UserController {
 			};
 	
 			if(req.body.email !== usuarioExiste.email){
-				const emailExiste = await User.findOne({email: req.body.email});
+				const emailExiste = await UserModel.findOne({email: req.body.email});
 				if(emailExiste){
 					return res.status(400).json({
 						error: true,
@@ -116,7 +116,7 @@ class UserController {
 				};
 			};
 			
-			User.updateOne({_id: req.params.id}, req.body).then(() => {
+			UserModel.updateOne({_id: req.params.id}, req.body).then(() => {
 				return res.json({
 					error: false,
 					message: "Usuário editado com sucesso!"
@@ -143,7 +143,7 @@ class UserController {
 
 		try {
 			
-			User.deleteOne({ _id: req.params.id }).then(() => {
+			UserModel.deleteOne({ _id: req.params.id }).then(() => {
 				return res.json({
 					error: false,
 					message: "Usuário apagado com sucesso!"
