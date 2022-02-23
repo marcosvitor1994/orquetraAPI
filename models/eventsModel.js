@@ -1,22 +1,21 @@
 const mongoose = require("mongoose");
 
 
-const consultaSchema = new mongoose.Schema({
-  medico: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Medico",
-  },
-  paciente: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Paciente",
-  },
-  data_hora: Date,
-  status: {
-    type: String,
-    enum: ["Disponível", "Ocupado", "Confirmado", "Não realizado"],
-    default: "Disponível",
-  },
-});
+const eventsSchema = new mongoose.Schema(
+    {
+        title: {
+          type: String,
+          required: [true, "Campo título deve ser preenchido"],
+        },
+        date: {
+          type: String,
+          required: [true, "Campo data deve ser preenchido"],
+        }
+    },
+    {
+        timestamps: true,
+    }
+)
 
 
-module.exports = mongoose.model("consulta", consultaSchema);
+module.exports = mongoose.model("event", eventsSchema);

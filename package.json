@@ -1,7 +1,7 @@
 {
   "name": "projeto_integrad-master",
   "version": "1.0.0",
-  "description": "## Projeto desenvolvido por alunos da turma de Analise e desenvolvimento de sistemas do terceiro semestre, do IESB-SUL de Brasilia - DF.",
+  "description": "Projeto desenvolvido para o melhor gerenciamento de uma orquestra, contando com cadastro de músicos, alunos e eventos.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -14,11 +14,13 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.12.11",
-    "mongoose-paginate-v2": "^1.3.18"
+    "jwt-decode": "^3.1.2",
+    "mongoose": "^5.13.14",
+    "mongoose-paginate-v2": "^1.6.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
