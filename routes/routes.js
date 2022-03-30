@@ -9,7 +9,9 @@ const ProfileController = require("../controllers/profileController.js");
 const musicoController = require("../controllers/musicoController.js");
 const alunoController = require("../controllers/alunoController.js");
 const EventsController = require("../controllers/eventsController.js");
-const ContatoController = require("../controllers/contatoController")
+const ContatoController = require("../controllers/contatoController.js");
+const PreFormsController = require("../controllers/preFormsController.js");
+const inventarioControllers = require("../controllers/inventarioControllers.js")
 
 const routes = new Router();
 
@@ -28,6 +30,20 @@ routes.get("/events", authMidd(["Admin", "Musico", "Aluno"]), EventsController.l
 routes.post("/events", authMidd(["Admin"]), EventsController.create);
 routes.put("/events/:pid", authMidd(["Admin"]), EventsController.update);
 routes.delete("/events/:pid", authMidd(["Admin"]), EventsController.delete);
+
+// PreForms
+routes.get("/forms", authMidd(["Admin"]), PreFormsController.list);
+routes.get("/forms/:pid", authMidd(["Admin"]), PreFormsController.listOne);
+routes.post("/forms", PreFormsController.create);
+routes.put("/forms/:id", authMidd(["Admin"]), PreFormsController.update);
+routes.delete("/forms/:id", authMidd(["Admin"]), PreFormsController.delete);
+
+// Inventário
+routes.get("/inventario", authMidd(["Admin"]), inventarioControllers.list);
+routes.get("/inventario/:id", authMidd(["Admin"]), inventarioControllers.listOne);
+routes.post("/inventario", authMidd(["Admin"]), inventarioControllers.create);
+routes.put("/inventario/:id", authMidd(["Admin"]), inventarioControllers.update);
+routes.delete("/inventario/:id", authMidd(["Admin"]), inventarioControllers.delete);
 
 //Musicos
 routes.get("/musicos", authMidd(["Admin"]), musicoController.list);
