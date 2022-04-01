@@ -11,7 +11,7 @@ const alunoController = require("../controllers/alunoController.js");
 const EventsController = require("../controllers/eventsController.js");
 const ContatoController = require("../controllers/contatoController.js");
 const PreFormsController = require("../controllers/preFormsController.js");
-const inventarioControllers = require("../controllers/inventarioControllers.js")
+const inventarioControllers = require("../controllers/inventarioController")
 
 const routes = new Router();
 
