@@ -47,7 +47,7 @@ class PreFormsController {
       console.log(req.body.preMusico.email)
 
       if (req.body.preMusico.senha){
-        req.body.senha = await bcrypt.hash(req.body.senha, 8);
+        req.body.preMusico.senha = await bcrypt.hash(req.body.preMusico.senha, 8);
       }
 
       PreFormsModel.create(req.body.preMusico).then((user) => {
