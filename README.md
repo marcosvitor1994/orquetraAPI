@@ -1,6 +1,6 @@
 # Orquestra API 
 
-## Projeto desenvolvido para o melhor gerenciamento de uma orquestra, contando com cadastro de músicos, alunos e eventos.
+## Projeto desenvolvido para o melhor gerenciamento de uma orquestra, contando com cadastro de inventário, músicos, alunos e eventos.
 
 
 ### Desenvolvedor :
