@@ -44,13 +44,13 @@ class PreFormsController {
 
   async create(req, res, next) {
     try {
-      console.log(req.body.email)
+      console.log(req.body.preMusico.email)
 
-      if (req.body.senha){
+      if (req.body.preMusico.senha){
         req.body.senha = await bcrypt.hash(req.body.senha, 8);
       }
 
-      PreFormsModel.create(req.body).then((user) => {
+      PreFormsModel.create(req.body.preMusico).then((user) => {
           return res.json({
             error: false,
             user,
