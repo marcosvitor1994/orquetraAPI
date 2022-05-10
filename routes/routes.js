@@ -33,7 +33,7 @@ routes.delete("/events/:pid", authMidd(["Admin"]), EventsController.delete);
 
 // PreForms
 routes.get("/forms", authMidd(["Admin"]), PreFormsController.list);
-routes.get("/forms/:pid", authMidd(["Admin"]), PreFormsController.listOne);
+routes.get("/forms/:id", authMidd(["Admin"]), PreFormsController.listOne);
 routes.post("/forms", PreFormsController.create);
 routes.put("/forms/:id", authMidd(["Admin"]), PreFormsController.update);
 routes.delete("/forms/:id", authMidd(["Admin"]), PreFormsController.delete);
