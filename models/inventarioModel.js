@@ -14,7 +14,7 @@ const inventarioSchema = new mongoose.Schema(
           type: String,
           required: [true, "Campo data deve ser preenchido"],
         },
-        instrumento: {
+        bem: {
           type: String,
           required: false
         },
