@@ -14,10 +14,6 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, "Campo email deve ser preenchido"],
     },
-    senha: {
-      type: String,
-      required: [true, "Campo email deve ser preenchido"],
-    },
     telefone: {
       type: String,
       required: [false, "Campo Telefone deve ser preenchido"],
@@ -59,6 +55,8 @@ const UserSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    discriminatorKey: "_role",
+
   }
 );
 
