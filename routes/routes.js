@@ -45,11 +45,11 @@ routes.put("/forms/:id", authMidd(["Admin"]), PreFormsController.update);
 routes.delete("/forms/:id", authMidd(["Admin"]), PreFormsController.delete);
 
 // Inventário
-routes.get("/inventario", authMidd(["Admin"]), inventarioControllers.list);
-routes.get("/inventario/:id", authMidd(["Admin"]), inventarioControllers.listOne);
-routes.post("/inventario", authMidd(["Admin"]), inventarioControllers.create);
-routes.put("/inventario/:id", authMidd(["Admin"]), inventarioControllers.update);
-routes.delete("/inventario/:id", authMidd(["Admin"]), inventarioControllers.delete);
+routes.get("/inventario", inventarioControllers.list);
+routes.get("/inventario/:id", inventarioControllers.listOne);
+routes.post("/inventario", inventarioControllers.create);
+routes.put("/inventario/:id", inventarioControllers.update);
+routes.delete("/inventario/:id", inventarioControllers.delete);
 
 //Musicos
 routes.get("/musicos", authMidd(["Admin"]), musicoController.list);
