@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const UserModel = require('../models/usuarios');
+const {AdminModel, UserModel } = require('../models/usuarios');
 
 class UserController {
 
@@ -73,7 +73,7 @@ class UserController {
 			console.log(user)
 			user.senha = await bcrypt.hash(user.senha, 8);
 	
-			UserModel.create(req.body.novoUsuario).then((user) => {
+			AdminModel.create(req.body.novoUsuario).then((user) => {
 				return res.json( {error:false, user} );
 				
 				
