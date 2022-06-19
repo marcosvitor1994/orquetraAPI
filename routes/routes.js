@@ -1,7 +1,7 @@
-const { Router, json } = require("express"); 
-const bcrypt = require('bcrypt');
+const { Router, json } = require("express");
+const bcrypt = require("bcrypt");
 
-const {UserModel, AdminModel} = require("../models/usuarios.js");
+const { UserModel, AdminModel } = require("../models/usuarios.js");
 const authMidd = require("../middlewares/auth.js");
 
 const LoginController = require("../controllers/loginController");
@@ -11,12 +11,18 @@ const alunoController = require("../controllers/alunoController.js");
 const EventsController = require("../controllers/eventsController.js");
 const ContatoController = require("../controllers/contatoController.js");
 const PreFormsController = require("../controllers/preFormsController.js");
-const inventarioControllers = require("../controllers/inventarioController")
+const inventarioControllers = require("../controllers/inventarioController");
+const UserController = require("../controllers/userController");
+const userController = require("../controllers/userController");
+
 
 const routes = new Router();
 
+//trabalho pi
+routes.post("/usuario", userController.create);
+
 // LOGIN - Aluno, Músico, Admin
-routes.post('/login', LoginController.login);
+routes.post("/login", LoginController.login);
 
 // Contato
 
@@ -65,40 +71,47 @@ routes.put("/profile/:id", authMidd(["Admin", "Musico", "Aluno"]), ProfileContro
 
 // Pesquisa de usuários
 routes.get("/users", (req, res) => {
-    const {nome, sexo, email, _role} = req.query;
-    UserModel.find(JSON.parse(JSON.stringify({nome, sexo, email, _role}))).select("-senha").then(users =>{ res.json( users ) });
-})
+  const { nome, sexo, email, _role } = req.query;
+  UserModel.find(JSON.parse(JSON.stringify({ nome, sexo, email, _role })))
+    .select("-senha")
+    .then((users) => {
+      res.json(users);
+    });
+});
 
 routes.get("/admin", async (req, res) => {
-    AdminModel.create({
-        email: "admin@sistema.com",
-        senha: "$2a$08$RSSVqdQZF9BfEKk.55DX8eQi2DIRtlg/8UAqQEyV/7KrgP6W9T7lC" // 12345678
-    }).then((admin) => {
-        res.json(admin);
-    });
+  AdminModel.create({
+    email: "admin@sistema.com",
+    senha: "$2a$08$RSSVqdQZF9BfEKk.55DX8eQi2DIRtlg/8UAqQEyV/7KrgP6W9T7lC", // 12345678
+    nome: "Uriel",
+    dataNascimento: "24/01/1972",
+    telefone: "(61) 98352-8168",
+    sexo: "M",
+  }).then((admin) => {
+    res.json(admin);
+  });
 });
 
 routes.get("/", (req, res, next) => {
-    res.status(200).json({
-        status: "Sucess", 
-        msg: "Api Orquestra rodando!"
-    });
+  res.status(200).json({
+    status: "Sucess",
+    msg: "Api Orquestra rodando!",
+  });
 });
 
 routes.use((req, res, next) => {
-    res.status(404).json({
-        error: true,
-        msg: 'Not Found'
-    });
-})
-
-routes.use((error, req, res, next) => {
-    console.log(error)
-    return res.status(500).json({
-        errror: true,
-        message: "Internal Server Error"
-    });
+  res.status(404).json({
+    error: true,
+    msg: "Not Found",
+  });
 });
 
+routes.use((error, req, res, next) => {
+  console.log(error);
+  return res.status(500).json({
+    errror: true,
+    message: "Internal Server Error",
+  });
+});
 
 module.exports = routes;
