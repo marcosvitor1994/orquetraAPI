@@ -56,7 +56,7 @@ class UserController {
 
 	}
 
-	async create(req, res) {
+	async create(req, res, next) {
 		
 		try {
 			const emailExiste = await UserModel.findOne({ email: req.body.novoUsuario.email });
@@ -70,10 +70,12 @@ class UserController {
 			};
 	
 			const user = req.body.novoUsuario;
+			console.log(user)
 			user.senha = await bcrypt.hash(user.senha, 8);
 	
-			UserModel.create(user).then((user) => {
-				return res.json( user );
+			UserModel.create(req.body.novoUsuario).then((user) => {
+				return res.json( {error:false, user} );
+				
 				
 			}).catch((err) => {
 				return res.status(400).json({
