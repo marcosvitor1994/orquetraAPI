@@ -88,7 +88,7 @@ class InventarioController {
         });
       }
 
-      Inventario.updateOne({ _id: req.params.id }, req.body)
+      Inventario.updateOne({ _id: req.params.id }, req.body.putBem)
         .then(() => {
           return res.json({
             error: false,
